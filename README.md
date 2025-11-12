@@ -1,4 +1,4 @@
-*Crewmate Creator*
+#Crewmate Creator
 
 **Crewmate Creator** is a website for building and managing your dream team of crewmates. Users can create crewmates with different categories and attributes, view statistics about their team, and track their team's success score.
 
