@@ -13,7 +13,7 @@ function Home() {
       <p>Build your dream team of crewmates!</p>
       <div style={{ marginTop: '20px' }}>
         <Link to="/create">
-          <button className="submit-btn" style={{ maxWidth: '300px' }}>
+          <button className="submit-btn home-create-btn">
             Create a New Crewmate
           </button>
         </Link>
