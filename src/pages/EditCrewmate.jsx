@@ -6,9 +6,25 @@ function EditCrewmate() {
   const { id } = useParams()
   const navigate = useNavigate()
   const [name, setName] = useState('')
+  const [category, setCategory] = useState('')
   const [speed, setSpeed] = useState('')
   const [color, setColor] = useState('')
   const [loading, setLoading] = useState(true)
+
+  const categories = {
+    Speedster: {
+      speeds: ['Very Fast', 'Fast'],
+      colors: ['Red', 'Yellow', 'Orange']
+    },
+    Tank: {
+      speeds: ['Slow', 'Medium'],
+      colors: ['Blue', 'Green', 'Purple']
+    },
+    Balanced: {
+      speeds: ['Medium', 'Fast'],
+      colors: ['Red', 'Blue', 'Green', 'Yellow', 'Purple', 'Orange']
+    }
+  }
 
   useEffect(() => {
     fetchCrewmate()
@@ -25,10 +41,20 @@ function EditCrewmate() {
       console.error('Error fetching crewmate:', error)
     } else {
       setName(data.name)
+      setCategory(data.category)
       setSpeed(data.speed)
       setColor(data.color)
     }
     setLoading(false)
+  }
+
+  const availableSpeeds = category ? categories[category].speeds : []
+  const availableColors = category ? categories[category].colors : []
+
+  const handleCategoryChange = (newCategory) => {
+    setCategory(newCategory)
+    setSpeed('')
+    setColor('')
   }
 
   const handleUpdate = async (e) => {
@@ -36,7 +62,7 @@ function EditCrewmate() {
 
     const { data, error } = await supabase
       .from('crewmates')
-      .update({ name: name, speed: speed, color: color })
+      .update({ name: name, category: category, speed: speed, color: color })
       .eq('id', id)
 
     if (error) {
@@ -85,35 +111,54 @@ function EditCrewmate() {
         </div>
 
         <div className="form-group">
-          <label>Speed:</label>
+          <label>Category:</label>
           <div className="attribute-options">
-            {['Slow', 'Medium', 'Fast', 'Very Fast'].map((option) => (
+            {Object.keys(categories).map((cat) => (
               <div
-                key={option}
-                className={`attribute-option ${speed === option ? 'selected' : ''}`}
-                onClick={() => setSpeed(option)}
+                key={cat}
+                className={`attribute-option ${category === cat ? 'selected' : ''}`}
+                onClick={() => handleCategoryChange(cat)}
               >
-                {option}
+                {cat}
               </div>
             ))}
           </div>
         </div>
 
-        <div className="form-group">
-          <label>Color:</label>
-          <div className="attribute-options">
-            {['Red', 'Blue', 'Green', 'Yellow', 'Purple', 'Orange'].map((option) => (
-              <div
-                key={option}
-                className={`attribute-option ${color === option ? 'selected' : ''}`}
-                onClick={() => setColor(option)}
-                style={{ backgroundColor: option.toLowerCase(), color: 'white' }}
-              >
-                {option}
+        {category && (
+          <>
+            <div className="form-group">
+              <label>Speed:</label>
+              <div className="attribute-options">
+                {availableSpeeds.map((option) => (
+                  <div
+                    key={option}
+                    className={`attribute-option ${speed === option ? 'selected' : ''}`}
+                    onClick={() => setSpeed(option)}
+                  >
+                    {option}
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
+            </div>
+
+            <div className="form-group">
+              <label>Color:</label>
+              <div className="attribute-options">
+                {availableColors.map((option) => (
+                  <div
+                    key={option}
+                    className={`attribute-option ${color === option ? 'selected' : ''}`}
+                    onClick={() => setColor(option)}
+                    style={{ backgroundColor: option.toLowerCase(), color: 'white' }}
+                  >
+                    {option}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </>
+        )}
 
         <button type="submit" className="submit-btn">
           Update Crewmate

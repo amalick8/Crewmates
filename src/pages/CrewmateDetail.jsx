@@ -37,7 +37,9 @@ function CrewmateDetail() {
 
   return (
     <div className="detail-container">
+      <div className="category-badge-large">{crewmate.category}</div>
       <h2>{crewmate.name}</h2>
+      <p><strong>Category:</strong> {crewmate.category}</p>
       <p><strong>Speed:</strong> {crewmate.speed}</p>
       <p><strong>Color:</strong> {crewmate.color}</p>
       <p><strong>Created:</strong> {new Date(crewmate.created_at).toLocaleDateString()}</p>
